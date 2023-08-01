@@ -1,9 +1,29 @@
 {
   "packages": [
-    "path:emulator"
+    "path:emulator",
+    "python38@latest",
+    "python38Packages.pip@latest",
+    "google-cloud-sdk@latest"
   ],
+  "env": {
+    "SPANNER_EMULATOR_HOST": "localhost:10007"
+  },
   "shell": {
-    "init_hook": null
+    "init_hook": [
+      "source $VENV_DIR/bin/activate",
+      "pip install -r requirements.txt"
+    ],
+    "scripts": {
+      "start_emulator": "emulator_main",
+      "setup_emulator": [
+        "gcloud config configurations create emulator",
+        "gcloud config set auth/disable_credentials true",
+        "gcloud config set project your-project-id",
+        "gcloud config set api_endpoint_overrides/spanner http://localhost:9020/",
+        "gcloud spanner instances create test-instance --config=emulator-config --description=\"Test Instance\" --nodes=1"
+      ],
+      "run_test": "python main.py test-instance --database-id example-db create_database"
+    }
   },
   "nixpkgs": {
     "commit": "f80ac848e3d6f0c12c52758c0f25c10c97ca3b62"

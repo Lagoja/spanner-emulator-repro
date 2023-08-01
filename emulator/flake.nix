@@ -56,7 +56,6 @@
                 };
               };
         } else { });
-        defaultPackage = self.packages.spanner-emulator;
       }
     );
 }
